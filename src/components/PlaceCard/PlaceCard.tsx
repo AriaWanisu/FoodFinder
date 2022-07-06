@@ -1,4 +1,5 @@
 import React from 'react'
+import './PlaceCard.css'
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -34,56 +35,65 @@ export default function PlaceCard(foodPlace: FoodPlaceProp) {
     // console.log(foodPlace);
     let currentDate = new Date()
 
+    const toHour12Format = (time: string) => {
+        let timeString = ''
+        if (time.length < 5) timeString = "0" + time + ':00'
+        else timeString = time + ':00'
+
+        const timeString12hr = new Date('1970-01-01T' + timeString + 'Z')
+            .toLocaleTimeString('en-US',
+                { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }
+            );
+        return timeString12hr
+    }
+
     return (
-        <Card sx={{ borderRadius: 2 }}>
+        <Card sx={{ borderRadius: 4 }}>
             <CardActionArea>
-                <CardHeader
-                    avatar={
-                        <Avatar aria-label="recipe" src={foodPlace.profile_image_url} variant="square" sx={{ width: 56, height: 56, borderRadius: 2 }} />
-                    }
-                    // action={
-                    //     <>
-                    //         <Badge color="primary" variant="dot" style={{ marginRight: '0.5rem' }} />
-                    //         <b>{foodPlace.rating}</b>
-                    //     </>
-                    // }
-                    title={<b>{foodPlace.name}</b>}
-                    subheader={foodPlace.operation_time.map((r) => {
-                        if (r.day === weekday[currentDate.getDay()]) {
-                            if (r.time_open === "closed") {
-                                return r.time_open
-                            } else {
-                                return (
-                                    <Grid container key={r.day}>
-                                        <Grid item xs={2}>
-                                            <CalendarMonthIcon style={{ color: 'black' }} />
-                                        </Grid>
-                                        <Grid item xs={8} style={{ marginTop: '0.2rem' }}>
-                                            <b >{r.time_open} - {r.time_close}</b>
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <Badge color="primary" variant="dot" style={{ marginRight: '0.7rem' }} />
-                                            <b>{foodPlace.rating}</b>
-                                        </Grid>
-                                    </Grid>)
-                            }
+                <Link to={`/detail/${foodPlace.id}`} className="link">
+                    <CardHeader
+                        avatar={
+                            <Avatar aria-label="recipe" src={foodPlace.profile_image_url} variant="square" sx={{ width: 56, height: 56, borderRadius: 2 }} />
                         }
-                    })}
-                />
-                <CardContent>
-                    <ImageList sx={{ width: 370, height: 100 }} cols={3} gap={0} >
-                        {foodPlace.images.map((item) => (
-                            <ImageListItem key={item}>
-                                <img
-                                    src={item}
-                                    srcSet={item}
-                                    loading="lazy"
-                                    style={{ borderRadius: 3 }}
-                                />
-                            </ImageListItem>
-                        ))}
-                    </ImageList>
-                </CardContent>
+                        title={<b>{foodPlace.name}</b>}
+                        subheader={foodPlace.operation_time.map((r) => {
+                            if (r.day === weekday[currentDate.getDay()]) {
+                                if (r.time_open === "closed") {
+                                    return r.time_open
+                                } else {
+                                    return (
+                                        <Grid container key={r.day} >
+                                            <Grid item xs={2}>
+                                                <CalendarMonthIcon style={{ color: 'black' }} />
+                                            </Grid>
+                                            <Grid item xs={8} style={{ marginTop: '0.2rem' }}>
+                                                <b >{toHour12Format(r.time_open)} - {toHour12Format(r.time_close)}</b>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <Badge color="primary" variant="dot" style={{ marginRight: '0.7rem' }} />
+                                                <b>{foodPlace.rating}</b>
+                                            </Grid>
+                                        </Grid>
+                                    )
+                                }
+                            }
+                        })}
+                    />
+                    <CardContent>
+                        <ImageList sx={{ width: '100%', height: 225 }} cols={3} gap={0} >
+                            {foodPlace.images.map((item) => (
+                                <ImageListItem key={item}>
+                                    <img
+                                        src={item}
+                                        srcSet={item}
+                                        loading="lazy"
+                                        style={{ borderRadius: 3 }}
+                                    />
+                                </ImageListItem>
+                            ))}
+                        </ImageList>
+                    </CardContent>
+                </Link>
             </CardActionArea>
         </Card>
     )

@@ -13,6 +13,24 @@ import data from '../../data/example_data.json'
 import PlaceCard from '../PlaceCard';
 import usePagination from "./Pagination";
 import Pagination from '@mui/material/Pagination';
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles({
+  root: {
+    '& .MuiPaginationItem-root': {
+      backgroundColor: '#FFF',
+    },
+    '& .Mui-selected': {
+      backgroundColor: '#134B8A',
+      color: '#FFF',
+    },
+    '& .MuiSelect-select': {
+      // border: '#134B8A',
+      // color: '#FFF',
+    },
+  },
+});
 
 const type = [
   'restaurant',
@@ -21,6 +39,7 @@ const type = [
 ];
 
 export default function PlaceList() {
+  const classes = useStyles();
   const [foodData, setFoodData] = useState(data);
   const [placeList, setPlaceList] = useState([]);
   const [page, setPage] = useState(1);
@@ -64,7 +83,7 @@ export default function PlaceList() {
 
   return (
     <div >
-      <Box component="main" sx={{ p: 3, backgroundColor: '#E5E5E5', height: '100%', minheight: '100%' }} >
+      <Box component="main" sx={{ p: 3, backgroundColor: '#E5E5E5', height: '100%', minHeight: '100vh' }} >
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: '0.5rem' }}>
           <Grid item xs={8}>
             <h2>Place List</h2>
@@ -73,6 +92,7 @@ export default function PlaceList() {
             <Box sx={{ minWidth: 120 }}>
               <FormControl fullWidth>
                 <Select
+                  className={classes.root}
                   value={placeType}
                   onChange={handleSelectChange}
                   displayEmpty
@@ -83,8 +103,8 @@ export default function PlaceList() {
                     <MenuItem
                       key={type}
                       value={type}
-                      // style={getStyles(name, personName, theme)}
-                      // style={{ borderRadius: 4 }}
+                    // style={getStyles(name, personName, theme)}
+                    // style={{ borderRadius: 4 }}
                     >
                       <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
                     </MenuItem>
@@ -118,6 +138,7 @@ export default function PlaceList() {
               <Grid item xs={12}>
                 <Grid container justifyContent="center">
                   <Pagination
+                    className={classes.root}
                     count={count}
                     size="large"
                     page={page}
@@ -125,7 +146,7 @@ export default function PlaceList() {
                     // shape="rounded"
                     color="primary"
                     onChange={handleChange}
-                  // style={{ backgroundColor: "white", color: "black" }}
+                    sx={{ borderColor: "red", color: "black" }}
                   />
                 </Grid>
 
