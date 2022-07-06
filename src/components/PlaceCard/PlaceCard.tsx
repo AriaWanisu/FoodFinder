@@ -4,6 +4,7 @@ import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CardMedia from '@mui/material/CardMedia';
 import Avatar from '@mui/material/Avatar';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -32,7 +33,6 @@ type FoodPlaceProp = {
 const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 export default function PlaceCard(foodPlace: FoodPlaceProp) {
-    // console.log(foodPlace);
     let currentDate = new Date()
 
     const toHour12Format = (time: string) => {
@@ -48,53 +48,63 @@ export default function PlaceCard(foodPlace: FoodPlaceProp) {
     }
 
     return (
-        <Card sx={{ borderRadius: 4 }}>
-            <CardActionArea>
-                <Link to={`/detail/${foodPlace.id}`} className="link">
-                    <CardHeader
-                        avatar={
-                            <Avatar aria-label="recipe" src={foodPlace.profile_image_url} variant="square" sx={{ width: 56, height: 56, borderRadius: 2 }} />
-                        }
-                        title={<b>{foodPlace.name}</b>}
-                        subheader={foodPlace.operation_time.map((r) => {
-                            if (r.day === weekday[currentDate.getDay()]) {
-                                if (r.time_open === "closed") {
-                                    return r.time_open
-                                } else {
-                                    return (
-                                        <Grid container key={r.day} >
-                                            <Grid item xs={2}>
-                                                <CalendarMonthIcon style={{ color: 'black' }} />
-                                            </Grid>
-                                            <Grid item xs={8} style={{ marginTop: '0.2rem' }}>
-                                                <b >{toHour12Format(r.time_open)} - {toHour12Format(r.time_close)}</b>
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                <Badge color="primary" variant="dot" style={{ marginRight: '0.7rem' }} />
-                                                <b>{foodPlace.rating}</b>
-                                            </Grid>
-                                        </Grid>
-                                    )
-                                }
+        <div>
+            <Card sx={{ borderRadius: 4 }}>
+                <CardActionArea>
+                    <Link to={`/detail/${foodPlace.id}`} className="link">
+                        <CardMedia
+                            component="img"
+                            height="140"
+                            image={foodPlace.profile_image_url}
+                            alt="header"
+                            sx={{ display: { xs: 'block', sm: 'none' } }}
+                        />
+                        <CardHeader
+                            avatar={
+                                <Avatar aria-label="recipe" src={foodPlace.profile_image_url} variant="square" sx={{ width: 56, height: 56, borderRadius: 2, display: { xs: 'none', sm: 'block' } }} />
                             }
-                        })}
-                    />
-                    <CardContent>
-                        <ImageList sx={{ width: '100%', height: 225 }} cols={3} gap={0} >
-                            {foodPlace.images.map((item) => (
-                                <ImageListItem key={item}>
-                                    <img
-                                        src={item}
-                                        srcSet={item}
-                                        loading="lazy"
-                                        style={{ borderRadius: 3 }}
-                                    />
-                                </ImageListItem>
-                            ))}
-                        </ImageList>
-                    </CardContent>
-                </Link>
-            </CardActionArea>
-        </Card>
+                            title={<b>{foodPlace.name}</b>}
+                            subheader={foodPlace.operation_time.map((r) => {
+                                if (r.day === weekday[currentDate.getDay()]) {
+                                    if (r.time_open === "closed") {
+                                        return r.time_open
+                                    } else {
+                                        return (
+                                            <Grid container key={r.day} >
+                                                <Grid item xs={1}>
+                                                    <CalendarMonthIcon style={{ color: 'black' }} />
+                                                </Grid>
+                                                <Grid item xs={9} style={{ marginTop: '0.2rem' }}>
+                                                    <b >{toHour12Format(r.time_open)} - {toHour12Format(r.time_close)}</b>
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <Badge color="primary" variant="dot" style={{ marginRight: '0.7rem' }} />
+                                                    <b style={{ color: '#134B8A' }}>{foodPlace.rating}</b>
+                                                </Grid>
+                                            </Grid>
+                                        )
+                                    }
+                                }
+                            })}
+                        />
+                        <CardContent>
+                            <ImageList sx={{ width: '100%', height: 225 }} cols={3} gap={0} >
+                                {foodPlace.images.map((item) => (
+                                    <ImageListItem key={item}>
+                                        <img
+                                            src={item}
+                                            srcSet={item}
+                                            loading="lazy"
+                                            style={{ borderRadius: 3 }}
+                                        />
+                                    </ImageListItem>
+                                ))}
+                            </ImageList>
+                        </CardContent>
+                    </Link>
+                </CardActionArea>
+            </Card>
+        </div>
+
     )
 }

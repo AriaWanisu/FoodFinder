@@ -8,16 +8,24 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Divider from '@mui/material/Divider';
 import data from '../../data/example_data.json'
 import PlaceCard from '../PlaceCard';
 import usePagination from "./Pagination";
 import Pagination from '@mui/material/Pagination';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const useStyles = makeStyles({
   root: {
+    '& MuiTextField-root': {
+      borderRadius: 15,
+    },
     '& .MuiPaginationItem-root': {
       backgroundColor: '#FFF',
     },
@@ -46,7 +54,8 @@ export default function PlaceList() {
   const PER_PAGE = 9;
   let count = Math.ceil(placeList.length / PER_PAGE);
   let _DATA = usePagination(placeList, PER_PAGE);
-  let [placeType, setPlaceType] = React.useState('restaurant');
+  const [placeType, setPlaceType] = React.useState('restaurant');
+  const [searchText, setSearchText] = React.useState<string>('');
 
   const handleSelectChange = (event: SelectChangeEvent) => {
     setPlaceType(event.target.value as string);
@@ -81,15 +90,34 @@ export default function PlaceList() {
     count = Math.ceil(arr.length / PER_PAGE);
   }
 
+  const search = () => {
+    const keyword = searchText.toLowerCase()
+    let arr: any = [];
+    foodData.map((res) => {
+      let split = 0
+      for(let i = 0 ; i <= res.name.length; i++){
+        if(res.name.slice(0,i).toLowerCase() === keyword || res.name.slice(split,i).toLowerCase() === keyword){
+          arr.push(res)
+        }
+        if(res.name.charAt(i) === " "){
+          split = i+1
+        }
+      }
+    })
+    console.log(foodData.filter(r => r.name === searchText));
+    setPlaceList(arr);
+    count = Math.ceil(arr.length / PER_PAGE);
+  }
+
   return (
     <div >
       <Box component="main" sx={{ p: 3, backgroundColor: '#E5E5E5', height: '100%', minHeight: '100vh' }} >
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: '0.5rem' }}>
-          <Grid item xs={8}>
+        <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 1, md: 3 }} columns={{ xs: 1, sm: 1, md: 12 }} style={{ marginTop: '0.5rem' }}>
+          <Grid item xs={6}>
             <h2>Place List</h2>
           </Grid>
-          <Grid item xs={4}>
-            <Box sx={{ minWidth: 120 }}>
+          <Grid item xs={3}>
+            <Box>
               <FormControl fullWidth>
                 <Select
                   className={classes.root}
@@ -97,14 +125,12 @@ export default function PlaceList() {
                   onChange={handleSelectChange}
                   displayEmpty
                   inputProps={{ 'aria-label': 'Without label' }}
-                  sx={{ backgroundColor: "white", borderRadius: 6 }}
+                  sx={{ backgroundColor: "white", borderRadius: 6, marginBottom: '1rem' }}
                 >
                   {type.map((type) => (
                     <MenuItem
                       key={type}
                       value={type}
-                    // style={getStyles(name, personName, theme)}
-                    // style={{ borderRadius: 4 }}
                     >
                       <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
                     </MenuItem>
@@ -113,9 +139,30 @@ export default function PlaceList() {
               </FormControl>
             </Box>
           </Grid>
+          <Grid item xs={3}>
+            <Box sx={{ minWidth: 20 }}>
+              <TextField
+                className='textfield'
+                value={searchText}
+                onChange={e => setSearchText(e.target.value)}
+                variant='outlined'
+                fullWidth
+                sx={{ backgroundColor: "white", borderRadius: 6, marginBottom: '1rem', fontFamily: 'Kanit' }}
+                InputProps={{
+                  'aria-label': 'Without label',
+                  endAdornment:
+                    <InputAdornment position="end">
+                      <IconButton type="submit" sx={{ p: '10px' }} aria-label="search" onClick={search}>
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>,
+                }}
+              />
+            </Box>
+          </Grid>
         </Grid>
         <Box>
-          <Grid container spacing={{ xs: 1, md: 3 }} columns={{ xs: 1, sm: 1, md: 12 }} >
+          <Grid container rowSpacing={2} spacing={{ xs: 1, md: 3 }} columns={{ xs: 1, sm: 1, md: 12 }} >
             {_DATA ? _DATA.currentData().map((v: any) => {
               return (
                 <Grid item key={v.id} xs={1} sm={1} md={4}>
@@ -123,15 +170,6 @@ export default function PlaceList() {
                 </Grid>
               );
             }) : (<></>)}
-            {/* {foodData ? (<>
-              {foodData.map((res) => {
-                return (
-                  <Grid item key={res.id} xs={1} sm={1} md={4} >
-                    <PlaceCard {...res} />
-                  </Grid>
-                )
-              })}
-            </>) : (<></>)} */}
           </Grid>
           <Box>
             <Grid container spacing={{ flexGrow: 1 }} style={{ marginTop: '2rem' }} >
@@ -149,11 +187,8 @@ export default function PlaceList() {
                     sx={{ borderColor: "red", color: "black" }}
                   />
                 </Grid>
-
               </Grid>
-
             </Grid>
-
           </Box>
         </Box>
       </Box>
