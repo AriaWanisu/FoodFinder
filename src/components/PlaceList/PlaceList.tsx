@@ -33,10 +33,6 @@ const useStyles = makeStyles({
       backgroundColor: '#134B8A',
       color: '#FFF',
     },
-    '& .MuiSelect-select': {
-      // border: '#134B8A',
-      // color: '#FFF',
-    },
   },
 });
 
@@ -66,7 +62,6 @@ export default function PlaceList() {
   };
 
   useEffect(() => {
-    // console.log(placeType);
     filterPlace(placeType);
   }, [])
 

@@ -2,16 +2,12 @@ import React, { useEffect } from 'react'
 import { Link, useParams } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import data from '../../data/example_data.json'
-import Container from '@mui/material/Container';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { makeStyles } from '@mui/styles';
 import { CardHeader } from '@mui/material';
 import ImageList from '@mui/material/ImageList';
@@ -195,11 +191,8 @@ export default function PleaceDetail() {
                 </CardContent>
               </Card>
             </Grid>
-
           </Grid>
-
         </Box>
-        {/* </Grid> */}
       </Box>
     </div >
   )
