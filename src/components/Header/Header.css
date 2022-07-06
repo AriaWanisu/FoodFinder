@@ -1,0 +1,6 @@
+.header {
+    position: sticky;
+    top: 0;
+    padding: 15px 5px;
+    background-color: pink
+  }
